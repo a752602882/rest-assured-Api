@@ -39,7 +39,7 @@ given.get("http://api.douban.com/v2/book/1220562").then().assertThat().body("cod
  
 ### given语法详解
 
-#### then式旧语法
+#### then式新语法（建议）
 ```Java
 given().
         param("x", "y").
@@ -49,16 +49,17 @@ then().
         statusCode(400).
         body("lotto.lottoId", equalTo(6));
 ```
-#### expect式新语法（建议）
+#### expect式旧语法
 ```Java
 given().
         param("x", "y").
-when().
-        get("/lotto").
-expect().
+expect().   //必须接在这里，不能放在when后面，表达上就不是很清晰
         assertThat().
         statusCode(400).
-        body("lotto.lottoId", equalTo(6));
+        body("lotto.lottoId", equalTo(6)).
+when().
+        get("/lotto");
+;
 ```
 #### ps:
 
@@ -66,6 +67,28 @@ expect().
 <br>　　　　请求参数,头区域：param,formParam,queryParam,pathParam,contentType...... </br>
 <br>　　`when() .  `</br> 
 <br>　　　　请求方式,路径参数区域：  post,get("pathParams")......</br>
-<br>　　`expect . `</br>
+<br>　　`then() . `</br>
 <br>　　　　期望区域：statusCode，body，assertThat()......</br>
+
+#### Json example
+
+```Java        
+    @Before
+    public void setUp() throws Exception {
+    RestAssured.baseURI = "https://api.steampowered.com/IEconDOTA2_570";             
+    RestAssured.port = 443;        //https才设置这个端口
+    }
+    
+     given()
+                .param("key","BAA464D3B432D062BEA99BA753214681").
+     when()
+                .get("/GetHeroes/v0001/").
+     then()
+                .body("result.status", equalTo(200),
+                        "result.count", equalTo(113));// 不能拆分为2个body,哪样是错误的
+       
+ ```
+#### ps:
+*  get()方法使用场景：没有参数的时候
+*  given()方法使用场景：有参数的时候
 
