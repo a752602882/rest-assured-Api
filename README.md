@@ -86,9 +86,28 @@ when().
      then()
                 .body("result.status", equalTo(200),
                         "result.count", equalTo(113));// 不能拆分为2个body,哪样是错误的
-       
+                        
+   
+        
  ```
 #### ps:
 *  get()方法使用场景：没有参数的时候
 *  given()方法使用场景：有参数的时候
+
+
+
+```Java     
+  ValidatableResponse resp =     given()
+                .param("key","BAA464D3B432D062BEA99BA753214681").
+                        when()
+                .get("/GetHeroes/v0001/").
+                        then();
+        //判断返回Json数据的title
+        resp.body("result.status", equalTo(200));
+        //判断二级属性rating.max的值
+        resp.body("result.count", equalTo(113));
+ ```
+如果要验证json里的很多数据怎么办呢？
+>>写无数的的resp.body();
+>>使用json模板一次性解决
 
