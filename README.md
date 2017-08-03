@@ -111,3 +111,26 @@ when().
 >>写无数的的resp.body();
 >>使用json模板一次性解决
 
+```Java
+      //设置默认的jsonsecema版本
+       JsonSchemaFactory jsonSchemaFactory = JsonSchemaFactory.newBuilder().setValidationConfiguration(
+       ValidationConfiguration.newBuilder().setDefaultVersion(DRAFTV3).freeze()).freeze();
+       
+       String url= JDTest.class.getClassLoader().getResource("match-schema.json").getPath();
+       get(dotaMatchUrl).then().assertThat().body(matchesJsonSchemaInClasspath(url).using(jsonSchemaFactory));
+ ```
+ #### ps： 
+ *  当然没必要非要在then后面使用，当我们获得http,https返回数据时候,分开判断，这种写法更加明确
+ *  String json = given.....
+ *  assertThat(json, matchesJsonSchemaInClasspath("greeting-schema.json"));
+ 
+ #### XML栗子
+ 
+ ```Java
+      given().param("key","BAA464D3B432D062BEA99BA753214681")
+                .when()
+                .get("/GetHeroes/v0001")
+                .then().assertThat().body("result.count",equalTo(113));
+ ```
+ * 虽然看上去和json一摸一样，但是xml在一些高级的用法上完全不同,就让我们先迷糊到吧
+ 
