@@ -134,3 +134,49 @@ when().
  ```
  * 虽然看上去和json一摸一样，但是xml在一些高级的用法上完全不同,就让我们先迷糊到吧
  
+ 
+ ## Json & Xml   语法糖
+ 
+ #### xml文件资源 
+   ```Java
+ <shopping>
+    <category type="groceries">
+        <item>Chocolate</item>
+        <item>Coffee</item>
+    </category>
+    <category type="supplies">
+        <item>Paper</item>
+        <item quantity="4">Pens</item>
+    </category>
+    <category type="present">
+        <item when="Aug 10">Kathryn's Birthday</item>
+    </category>
+</shopping>
+   ```
+   
+  ```Java
+   @Test
+    public  void testShoppingXML(){
+        //第一种方法
+        ValidatableResponse response=given()
+                .when()
+                        .get("/test/Shopping.xml")
+                .then()
+                .body("shopping.category.find { it.@type == 'groceries' }.item",hasItems("Chocolate", "Coffee"));
+
+
+       // 第二种方法
+        String  response1  = get("/test/Shopping.xml").asString();
+        List<String> groceries = from(response1).getList("shopping.category.find { it.@type == 'groceries' }.item");
+
+       //第三种方法
+        get("/test/Shopping.xml").then().body("**.find{it.@type == 'groceries'}",hasItems("Chocolate", "Coffee"));
+   }
+ 
+  ```
+ * shopping-->category节点，找一个叫groceries的category节点，所以返回的值是category节点，节点下有许多元素
+ 
+ 
+ 
+ 
+ 
