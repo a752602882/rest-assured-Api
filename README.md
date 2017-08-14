@@ -178,6 +178,84 @@ when().
  * shopping-->category节点，找一个叫groceries的category节点，所以返回的值是category节点，节点下有许多元素
  
  
- 
- 
- 
+ #### Json文件资源
+  ```Java
+  {
+  "store":{
+   "book":[
+        {
+            "author":"Nigel Rees",
+            "category":"reference",
+            "price":8.95,
+            "title":"Sayings of the Century"
+        },
+        {
+        ......
+        },
+        {
+        ......
+        },
+        {
+         ......
+         }
+    ]
+  }
+}    
+   ```
+  ```Java    
+ ValidatableResponse response=given()
+                .when()
+                .get("/test/store.json")
+                .then()
+                .body("store.book.findAll { it.price<10 }.title" +
+                        "",hasItems("Chocolate", "Coffee"));
+   ```
+*  store-->book-->title  这个节点下的price<10
+*  Json 语法{} 是用来放键值对    , [ ] 是用来放数组的 store.book[0].price &  store.book[1].price
+可能检索出来有多个符合条件的，所以就要用findAll
+
+  ```Java    
+  /* 
+     对 author属性的值求长度，collect{}和findAll这些方法类似，是一个集合,一个长度的集合
+     最后判断这个集合所有元素之和（17，20，58）『sum()』是否大于50
+  */
+    given().when().get("/test/store.json").then()
+               .body("store.book.author.collect {it.length() }.sum()",greaterThan(50));
+               
+   ```            
+   
+   #### 响应内容返回类型
+  ```Java 
+   InputStream stream = get("/lotto").asInputStream();  
+   byte[] byteArray = get("/lotto").asByteArray();
+   String json = get("/lotto").asString();
+   ```
+   * 可见，响应内容可以通过输入流 ，二进制，字符串等形式返回
+   
+   
+   #### extract 提取响应信息
+   
+  ```Java
+{
+    "title" : "My Title",
+     "_links": {
+             "self": { "href": "/title" },
+             "next": { "href": "/title?page=2" }
+          }
+}
+//
+Response response = 
+given().
+        param("param_name", "param_value").
+when().
+        get("/title").
+then().
+        contentType(JSON).
+        body("title", equalTo("My Title")).
+extract().
+        response(); 
+
+String nextTitleLink = response.path("_links.next.href");
+String headerValue = response.header("headerName");
+   ```
+* extract 是提取的意思 ,提取响应的所有信息，用于以后的操作，比如说：返回的值是下一个请求的地址等...... 
