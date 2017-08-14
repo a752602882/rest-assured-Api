@@ -224,7 +224,7 @@ when().
                
    ```            
    
-   #### 响应内容返回类型
+#### 响应内容返回类型
   ```Java 
    InputStream stream = get("/lotto").asInputStream();  
    byte[] byteArray = get("/lotto").asByteArray();
@@ -233,7 +233,7 @@ when().
    * 可见，响应内容可以通过输入流 ，二进制，字符串等形式返回
    
    
-   #### extract 提取响应信息
+#### extract 提取响应信息
    
   ```Java
 {
