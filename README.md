@@ -138,7 +138,8 @@ when().
  ## Json & Xml   语法糖
  
  #### xml文件资源 
-   ```Java
+ 
+  ```Java
  <shopping>
     <category type="groceries">
         <item>Chocolate</item>
@@ -152,7 +153,7 @@ when().
         <item when="Aug 10">Kathryn's Birthday</item>
     </category>
 </shopping>
-   ```
+  ```
    
   ```Java
    @Test
